@@ -106,8 +106,8 @@ export default function Home() {
             <Image
                 id="arrow"
                 src="/arrow.png"
-                width={200}
-                height={200}
+                width={100}
+                height={100}
                 className="absolute top-1/2 left-1/3 transform -translate-x-2/3 -translate-y-1/2 transition duration-500 ease-in-out"
                  alt={'Arrow'}></Image>
         </div>
