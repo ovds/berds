@@ -9,12 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
     "@types/node": "20.8.10",
     "@types/react": "18.2.34",
     "@types/react-dom": "18.2.14",
     "autoprefixer": "10.4.16",
     "eslint": "8.52.0",
     "eslint-config-next": "14.0.1",
+    "expo-location": "^16.3.0",
+    "geolib": "^3.3.4",
     "html5-qrcode": "^2.3.8",
     "next": "14.0.1",
     "postcss": "8.4.31",
