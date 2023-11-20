@@ -48,10 +48,12 @@ export default function Home() {
         }
     }
 
-    if (window.DeviceOrientationEvent) {
-        window.addEventListener("deviceorientation", handleOrientation);
-    } else {
-        console.log("DeviceOrientationEvent is not supported");
+    if (typeof window !== "undefined") {
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", handleOrientation);
+        } else {
+            console.log("DeviceOrientationEvent is not supported");
+        }
     }
 
     function handleOrientation(event: any) {
