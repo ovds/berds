@@ -38,12 +38,14 @@ export default function Home() {
     const [angle, setAngle] = useState(0);
     const place = "Marbles";
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-            setUserLocation(position);
-        });
-    } else {
-        console.log("Not Available");
+    if (typeof navigator !== "undefined") {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                setUserLocation(position);
+            });
+        } else {
+            console.log("Not Available");
+        }
     }
 
     if (window.DeviceOrientationEvent) {
