@@ -3,6 +3,7 @@
 import {useEffect, useState} from "react";
 import Image from 'next/image';
 import * as geolib from "geolib";
+import {ChakraProvider, Select} from "@chakra-ui/react";
 
 const locations = {
     "Marbles": {
@@ -36,7 +37,7 @@ export default function Home() {
     const [userLocation, setUserLocation] = useState<GeolocationPosition | null>(null);
     const [userHeading, setUserHeading] = useState(0);
     const [angle, setAngle] = useState(0);
-    const place = "Marbles";
+    const [place, setPlace] = useState("Marbles");
 
     if (typeof navigator !== "undefined") {
         if (navigator.geolocation) {
@@ -74,7 +75,7 @@ export default function Home() {
             setAngle(getBearing() - userHeading);
             rotateImage(angle);
         }
-    }, [userLocation]);
+    }, [userLocation, angle, userHeading, place]);
 
     const getBearing = () => {
         if (userLocation == null) {
@@ -97,19 +98,30 @@ export default function Home() {
         if (image == null) {
             return;
         }
-        image.style.transform = `rotate(${userHeading}deg)`;
+        image.style.transform = `rotate(${angle}deg)`;
     };
 
     return (
-        <div className={'bg-slate-700 w-screen h-screen pt-10 px-5'}>
-            <h1>{userHeading}</h1>
-            <Image
-                id="arrow"
-                src="/arrow.png"
-                width={100}
-                height={100}
-                className="absolute top-1/2 left-1/3 transform -translate-x-2/3 -translate-y-1/2 transition duration-500 ease-in-out"
-                 alt={'Arrow'}></Image>
-        </div>
+        <ChakraProvider>
+            <div className={'bg-slate-700 w-screen h-screen pt-10 px-5'}>
+                <Select placeholder="Select activity" onChange={(e: any) => {
+                    setPlace(e.target.value);
+                }}>
+                    <option value="Marbles">Marbles</option>
+                    <option value="Lava">Lava</option>
+                    <option value="Volleyball">Volleyball</option>
+                    <option value="Freeze">Freeze</option>
+                    <option value="Plant">Plant</option>
+                    <option value="Tag">Tag</option>
+                </Select>
+                <Image
+                    id="arrow"
+                    src="/arrow.png"
+                    width={100}
+                    height={100}
+                    className="absolute top-1/2 left-1/3 transform -translate-x-2/3 -translate-y-1/2 transition duration-500 ease-in-out"
+                    alt={'Arrow'}></Image>
+            </div>
+        </ChakraProvider>
     )
 }
