@@ -1,7 +1,7 @@
 'use client'
 
-import {useState} from "react";
-import {Center, ChakraProvider, Select} from "@chakra-ui/react";
+import {useState, useEffect} from "react";
+import {Button, Center, ChakraProvider, Select} from "@chakra-ui/react";
 
 const locations = {
     "Freeze": {
@@ -27,12 +27,42 @@ const locations = {
     "Volleyball": {
         "latitude": 1.2977777777777777,
         "longitude": 103.76027777777777
+    },
+    "Home": {
+        "latitude": 1.4013007928661028,
+        "longitude": 103.91365538940123
     }
 }
 
 export default function Home() {
     const [userLocation, setUserLocation] = useState<GeolocationPosition | null>(null);
     const [place, setPlace] = useState("Select location");
+
+    if (typeof navigator !== "undefined") {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                setUserLocation(position);
+            });
+        } else {
+            console.log("Not Available");
+        }
+    }
+
+    useEffect(() => {
+        return () => {
+            if (typeof navigator !== "undefined") {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        setUserLocation(position);
+                    });
+                } else {
+                    console.log("Not Available");
+                }
+            }
+        };
+    }, [userLocation, place]);
+
+
 
     function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
         const R = 6371; // Radius of the earth in km
@@ -50,15 +80,6 @@ export default function Home() {
         return deg * (Math.PI / 180);
     }
 
-    if (typeof navigator !== "undefined") {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                setUserLocation(position);
-            });
-        } else {
-            console.log("Not Available");
-        }
-    }
 
     function mapDistanceToValue(distance: number) {
         const minDistance = 0;
@@ -75,6 +96,9 @@ export default function Home() {
 
     const getDistance = (place: string) => {
         if (place == 'Select location') return "Select a location";
+        //check if place is in locations
+        // @ts-ignore
+        if (!locations[place]) return "Select a location";
         if (userLocation) {
             // @ts-ignore
             const distance = getDistanceFromLatLonInKm(userLocation.coords.latitude, userLocation.coords.longitude, locations[place].latitude, locations[place].longitude);
@@ -86,8 +110,9 @@ export default function Home() {
     const getDistanceColor = (place: string) => {
         if (place == 'Select location') return "150, 150, 150";
         const distance = getDistance(place);
+        if (distance == "Select a location") return "150, 150, 150";
         const value = mapDistanceToValue(parseFloat(distance));
-        if (value > 50) {
+        if (value > 127.5) {
             return `255, ${255 - value}, ${255 - value}`;
         } else {
             return `${value}, 255, ${value}`;
@@ -97,13 +122,14 @@ export default function Home() {
     return (
         <ChakraProvider>
             <div className={'bg-slate-700 w-screen h-screen pt-10 px-5 flex flex-col text-center align-center justify-center'}>
-                <Select placeholder="Select location" onChange={(e) => setPlace(e.target.value)} variant={'filled'} bg={'white'} className={'bg-white'}>
+                <Select placeholder={place} onChange={(e) => setPlace(e.target.value)} variant={'filled'} bg={'white'} className={'bg-white'} value={place}>
                     {Object.keys(locations).map((place, i) => {
                         return <option key={i} value={place}>{place}</option>
                     })}
                 </Select>
-                <Center className={'w-full h-full'}>
+                <Center className={'w-full h-full flex-col'}>
                     <div className={'text-center justify-center align-center flex flex-col px-5 h-1/2 w-full rounded-2xl'} style={ {backgroundColor: `rgb(${getDistanceColor(place)})`} }></div>
+                    <Button className={'mt-5 w-full'} onClick={() => setPlace(place)}>Sync</Button>
                 </Center>
             </div>
         </ChakraProvider>
