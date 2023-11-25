@@ -113,9 +113,9 @@ export default function Home() {
         if (distance == "Select a location") return "150, 150, 150";
         const value = mapDistanceToValue(parseFloat(distance));
         if (value > 127.5) {
-            return `255, ${255 - value}, ${255 - value}`;
+            return `255, ${255 - value*2}, ${255 - value*2}`;
         } else {
-            return `${value}, 255, ${value}`;
+            return `${value*2}, 255, ${value*2}`;
         }
     }
 
