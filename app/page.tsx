@@ -83,7 +83,7 @@ export default function Home() {
 
     function mapDistanceToValue(distance: number) {
         const minDistance = 0;
-        const maxDistance = 400;
+        const maxDistance = 300;
         const minValue = 0;
         const maxValue = 255;
 
@@ -108,16 +108,23 @@ export default function Home() {
     }
 
     const getDistanceColor = (place: string) => {
-        if (place == 'Select location') return "150, 150, 150";
+        if (place === 'Select location') return "150, 150, 150"; // Red
         const distance = getDistance(place);
-        if (distance == "Select a location") return "150, 150, 150";
+        if (distance === "Select a location") return "150, 150, 150"; // Red
+
         const value = mapDistanceToValue(parseFloat(distance));
+
         if (value > 127.5) {
-            return `255, ${255 - value*2}, ${255 - value*2}`;
+            // Red to Yellow transition
+            const greenComponent = 255 - Math.round((value - 127.5) * 2);
+            return `255, ${greenComponent}, 0`; // Red to Yellow
         } else {
-            return `${value*2}, 255, ${value*2}`;
+            // Yellow to Green transition
+            const redComponent = Math.round(value * 2);
+            return `${redComponent}, 255, 0`; // Yellow to Green
         }
-    }
+    };
+
 
     return (
         <ChakraProvider>
