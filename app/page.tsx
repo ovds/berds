@@ -134,7 +134,7 @@ export default function Home() {
                         return <option key={i} value={place}>{place}</option>
                     })}
                 </Select>
-                <h1>Distance: {getDistance(place)}</h1>
+                <h1 className={"mt-10 text-white font-semibold"}>Distance: {getDistance(place)}</h1>
                 <Center className={'w-full h-full flex-col'}>
                     <div className={'text-center justify-center align-center flex flex-col px-5 h-1/2 w-full rounded-2xl'} style={ {backgroundColor: `rgb(${getDistanceColor(place)})`} }></div>
                     <Button className={'mt-5 w-full'} onClick={() => setPlace(place)}>Sync</Button>
